@@ -212,23 +212,24 @@ val solution = llmService.solveWordProblem(
 - ✅ LLM integration framework
 
 ### Phase 2 (Completed)
-- [x] Function graphing with `f(x)` input
-- [x] Configurable graph domain (`xMin`, `xMax`)
-- [x] Interactive plotting with MPAndroidChart (pan/zoom)
-- [x] Graph point sampling + filtering for non-finite values
-- [x] Unit tests for graph generation paths
+- ✅ Function graphing with `f(x)` input
+- ✅ Configurable graph domain (`xMin`, `xMax`)
+- ✅ Interactive plotting with MPAndroidChart (pan/zoom)
+- ✅ Graph point sampling + filtering for non-finite values
+- ✅ Unit tests for graph generation paths
 
-### Phase 3 (Future)
-- [ ] Matrix operations
-- [ ] Statistics & probability
-- [ ] Calculus (derivatives, integrals)
-- [ ] Cloud sync for history
-- [ ] Offline graphing
-- [ ] 3D graphing
-- [ ] Advanced chemistry (molecular structure visualization)
-- [ ] Real-time collaboration
-- [ ] Custom function definition
-- [ ] Formula library/search
+### Phase 3 (In Progress)
+- ✅ Matrix determinant operations
+- ✅ Statistics summary (mean/median/std-dev/min/max)
+- ✅ Probability (binomial PMF)
+- ✅ Numerical calculus (derivative and integral)
+- ✅ Cloud sync for history
+- ✅ Offline graphing
+- ✅ 3D graphing
+- ✅ Advanced chemistry (molecular structure visualization)
+- ✅ Real-time collaboration
+- ✅ Custom function definition
+- ✅ Formula library/search
 
 ## Best Practices
 
