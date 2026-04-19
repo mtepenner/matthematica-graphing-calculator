@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/matthematica/data/database/dao/UserDao.kt">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/app/src/main/java/com/matthematica/data/database/dao/UserDao.kt" />
+              <option name="updatedContent" value="package com.matthematica.data.database.dao&#10;&#10;import androidx.room.Dao&#10;import androidx.room.Delete&#10;import androidx.room.Insert&#10;import androidx.room.Query&#10;import androidx.room.Update&#10;import com.matthematica.data.model.User&#10;import kotlinx.coroutines.flow.Flow&#10;&#10;@Dao&#10;interface UserDao {&#10;    @Insert&#10;    suspend fun insertUser(user: User): Long&#10;&#10;    @Query(&quot;SELECT * FROM users WHERE email = :email LIMIT 1&quot;)&#10;    suspend fun getUserByEmail(email: String): User?&#10;&#10;    @Query(&quot;SELECT * FROM users WHERE id = :userId LIMIT 1&quot;)&#10;    suspend fun getUserById(userId: String): User?&#10;&#10;    @Update&#10;    suspend fun updateUser(user: User)&#10;&#10;    @Delete&#10;    suspend fun deleteUser(user: User)&#10;&#10;    @Query(&quot;SELECT * FROM users WHERE id = :userId&quot;)&#10;    fun observeUser(userId: String): Flow&lt;User?&gt;&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
