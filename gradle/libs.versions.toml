@@ -20,6 +20,7 @@ apacheCommonsMath = "3.6.1"
 mpandroidchart = "3.1.0"
 ksp = "2.0.21-1.0.27"
 lifecycleViewmodelCompose = "2.8.7"
+coreKtxVersion = "1.18.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +58,7 @@ androidx-datastore = { group = "androidx.datastore", name = "datastore-preferenc
 exp4j = { group = "net.objecthunter", name = "exp4j", version.ref = "exp4j" }
 apache-commons-math = { group = "org.apache.commons", name = "commons-math3", version.ref = "apacheCommonsMath" }
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

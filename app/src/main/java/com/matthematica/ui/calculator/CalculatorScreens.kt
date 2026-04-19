@@ -83,6 +83,11 @@ fun CalculatorScreen(
                     onClick = { selectedTab = 4; viewModel.setMode(CalculationMode.GRAPHING) },
                     text = { Text("Graph") }
                 )
+                Tab(
+                    selected = selectedTab == 5,
+                    onClick = { selectedTab = 5; viewModel.setMode(CalculationMode.PHASE3) },
+                    text = { Text("Phase 3") }
+                )
             }
 
             // Display
@@ -132,6 +137,7 @@ fun CalculatorScreen(
                 2 -> ChemistryCalculatorUI(viewModel)
                 3 -> WordProblemSolverUI(viewModel)
                 4 -> GraphingCalculatorUI(viewModel)
+                5 -> Phase3CalculatorUI(viewModel)
             }
         }
     }
@@ -364,6 +370,311 @@ private fun GraphingCalculatorUI(viewModel: CalculatorViewModel) {
                     .fillMaxWidth()
                     .height(280.dp)
             )
+        }
+    }
+}
+
+@Composable
+private fun Phase3CalculatorUI(viewModel: CalculatorViewModel) {
+    val operation by viewModel.phase3Operation.collectAsState()
+    val inputA by viewModel.phase3InputA.collectAsState()
+    val inputB by viewModel.phase3InputB.collectAsState()
+    val inputC by viewModel.phase3InputC.collectAsState()
+    val expression by viewModel.displayValue.collectAsState()
+    val presets by viewModel.savedGraphPresets.collectAsState()
+    val formulaResults by viewModel.formulaSearchResults.collectAsState()
+    val customFunctions by viewModel.customFunctions.collectAsState()
+    val surfacePoints by viewModel.surfacePoints.collectAsState()
+    val moleculeStructure by viewModel.moleculeStructure.collectAsState()
+    val collaborationState by viewModel.collaborationState.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text("Phase 3 - Advanced Math", style = MaterialTheme.typography.titleMedium)
+
+        val operationButtons = listOf(
+            Phase3Operation.MATRIX_DETERMINANT to "Matrix det",
+            Phase3Operation.STATISTICS_SUMMARY to "Statistics",
+            Phase3Operation.BINOMIAL_PROBABILITY to "Binomial",
+            Phase3Operation.DERIVATIVE to "Derivative",
+            Phase3Operation.INTEGRAL to "Integral",
+            Phase3Operation.CLOUD_SYNC to "Cloud sync",
+            Phase3Operation.OFFLINE_GRAPHING to "Offline graph",
+            Phase3Operation.GRAPH_3D to "3D graph",
+            Phase3Operation.MOLECULE_VISUALIZATION to "Molecule",
+            Phase3Operation.COLLABORATION to "Collab",
+            Phase3Operation.CUSTOM_FUNCTION to "Custom fn",
+            Phase3Operation.FORMULA_LIBRARY to "Formula search"
+        )
+
+        operationButtons.chunked(2).forEach { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                row.forEach { (target, label) ->
+                    Button(
+                        onClick = { viewModel.setPhase3Operation(target) },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(if (operation == target) "* $label" else label)
+                    }
+                }
+            }
+        }
+
+        when (operation) {
+            Phase3Operation.MATRIX_DETERMINANT -> {
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("Matrix A") },
+                    placeholder = { Text("Example: 1,2;3,4") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Phase3Operation.STATISTICS_SUMMARY -> {
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("Values") },
+                    placeholder = { Text("Example: 2,4,4,4,5,5,7,9") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Phase3Operation.BINOMIAL_PROBABILITY -> {
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("n (trials)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputB,
+                    onValueChange = { viewModel.setPhase3Inputs(inputB = it) },
+                    label = { Text("k (successes)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputC,
+                    onValueChange = { viewModel.setPhase3Inputs(inputC = it) },
+                    label = { Text("p (success probability)") },
+                    placeholder = { Text("Example: 0.5") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Phase3Operation.DERIVATIVE -> {
+                OutlinedTextField(
+                    value = expression,
+                    onValueChange = viewModel::setDisplayValue,
+                    label = { Text("f(x)") },
+                    placeholder = { Text("Example: x^3 + sin(x)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("x") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputB,
+                    onValueChange = { viewModel.setPhase3Inputs(inputB = it) },
+                    label = { Text("h (optional)") },
+                    placeholder = { Text("Defaults to 1e-5") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Phase3Operation.INTEGRAL -> {
+                OutlinedTextField(
+                    value = expression,
+                    onValueChange = viewModel::setDisplayValue,
+                    label = { Text("f(x)") },
+                    placeholder = { Text("Example: x^2") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("Lower bound a") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputB,
+                    onValueChange = { viewModel.setPhase3Inputs(inputB = it) },
+                    label = { Text("Upper bound b") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputC,
+                    onValueChange = { viewModel.setPhase3Inputs(inputC = it) },
+                    label = { Text("Intervals (optional)") },
+                    placeholder = { Text("Defaults to 1000") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Phase3Operation.CLOUD_SYNC -> {
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("Action") },
+                    placeholder = { Text("Type 'sync' or 'restore'") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            Phase3Operation.OFFLINE_GRAPHING -> {
+                OutlinedTextField(
+                    value = expression,
+                    onValueChange = viewModel::setDisplayValue,
+                    label = { Text("f(x)") },
+                    placeholder = { Text("Example: sin(x)+x^2") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("Preset name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text("Saved presets: ${presets.size}")
+                presets.take(3).forEach { preset ->
+                    Text("- ${preset.name}: ${preset.expression} on [${preset.xMin}, ${preset.xMax}]")
+                }
+            }
+
+            Phase3Operation.GRAPH_3D -> {
+                OutlinedTextField(
+                    value = expression,
+                    onValueChange = viewModel::setDisplayValue,
+                    label = { Text("z = f(x,y)") },
+                    placeholder = { Text("Example: sin(x) + cos(y)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("xMin (optional)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputB,
+                    onValueChange = { viewModel.setPhase3Inputs(inputB = it) },
+                    label = { Text("xMax (optional)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputC,
+                    onValueChange = { viewModel.setPhase3Inputs(inputC = it) },
+                    label = { Text("|y| range (optional)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (surfacePoints.isNotEmpty()) {
+                    Text("3D points: ${surfacePoints.size}")
+                    Text("Preview point: (${surfacePoints.first().x}, ${surfacePoints.first().y}, ${surfacePoints.first().z})")
+                }
+            }
+
+            Phase3Operation.MOLECULE_VISUALIZATION -> {
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("Molecule formula") },
+                    placeholder = { Text("Try H2O, CO2, CH4, NH3") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                moleculeStructure?.let { structure ->
+                    Text("Structure: ${structure.name}")
+                    Text("Atoms: ${structure.atoms.joinToString { it.symbol }}")
+                    Text("Bonds: ${structure.bonds.size}")
+                }
+            }
+
+            Phase3Operation.COLLABORATION -> {
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("Action") },
+                    placeholder = { Text("create | join | update") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputB,
+                    onValueChange = { viewModel.setPhase3Inputs(inputB = it) },
+                    label = { Text("Value") },
+                    placeholder = { Text("Session ID / Display Name / Expression") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputC,
+                    onValueChange = { viewModel.setPhase3Inputs(inputC = it) },
+                    label = { Text("Name (for create)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text("Session: ${collaborationState.sessionId.ifBlank { "(none)" }}")
+                Text("Participants: ${collaborationState.participants.joinToString().ifBlank { "(none)" }}")
+                Text("Shared: ${collaborationState.sharedExpression.ifBlank { "(empty)" }}")
+            }
+
+            Phase3Operation.CUSTOM_FUNCTION -> {
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("Function name") },
+                    placeholder = { Text("Example: f1") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputB,
+                    onValueChange = { viewModel.setPhase3Inputs(inputB = it) },
+                    label = { Text("Expression or value") },
+                    placeholder = { Text("Define: x^2+1 | Evaluate: ignored") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = inputC,
+                    onValueChange = { viewModel.setPhase3Inputs(inputC = it) },
+                    label = { Text("Mode") },
+                    placeholder = { Text("Type 'define' or x value") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (customFunctions.isNotEmpty()) {
+                    Text("Defined functions:")
+                    customFunctions.forEach { fn -> Text("- ${fn.name}(x) = ${fn.expression}") }
+                }
+            }
+
+            Phase3Operation.FORMULA_LIBRARY -> {
+                OutlinedTextField(
+                    value = inputA,
+                    onValueChange = { viewModel.setPhase3Inputs(inputA = it) },
+                    label = { Text("Search query") },
+                    placeholder = { Text("Try algebra, integral, chemistry") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (formulaResults.isNotEmpty()) {
+                    Text("Matches:")
+                    formulaResults.take(5).forEach { item ->
+                        Text("- ${item.name}: ${item.expression}")
+                    }
+                }
+            }
+        }
+
+        Button(
+            onClick = { viewModel.calculate() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Run Phase 3 Calculation")
         }
     }
 }

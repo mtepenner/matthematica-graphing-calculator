@@ -90,6 +90,68 @@ class ChemistryService @Inject constructor() {
         }
     }
 
+    fun getMolecularStructure(formula: String): Result<MoleculeStructure> {
+        return try {
+            val normalized = formula.trim().uppercase()
+            val structure = when (normalized) {
+                "H2O" -> MoleculeStructure(
+                    name = "Water",
+                    atoms = listOf(
+                        MoleculeAtom("O", 0f, 0f),
+                        MoleculeAtom("H", -1f, 1f),
+                        MoleculeAtom("H", 1f, 1f)
+                    ),
+                    bonds = listOf(MoleculeBond(0, 1), MoleculeBond(0, 2))
+                )
+
+                "CO2" -> MoleculeStructure(
+                    name = "Carbon Dioxide",
+                    atoms = listOf(
+                        MoleculeAtom("O", -1.5f, 0f),
+                        MoleculeAtom("C", 0f, 0f),
+                        MoleculeAtom("O", 1.5f, 0f)
+                    ),
+                    bonds = listOf(MoleculeBond(0, 1, 2), MoleculeBond(1, 2, 2))
+                )
+
+                "CH4" -> MoleculeStructure(
+                    name = "Methane",
+                    atoms = listOf(
+                        MoleculeAtom("C", 0f, 0f),
+                        MoleculeAtom("H", 0f, -1.5f),
+                        MoleculeAtom("H", -1.5f, 0f),
+                        MoleculeAtom("H", 1.5f, 0f),
+                        MoleculeAtom("H", 0f, 1.5f)
+                    ),
+                    bonds = listOf(
+                        MoleculeBond(0, 1),
+                        MoleculeBond(0, 2),
+                        MoleculeBond(0, 3),
+                        MoleculeBond(0, 4)
+                    )
+                )
+
+                "NH3" -> MoleculeStructure(
+                    name = "Ammonia",
+                    atoms = listOf(
+                        MoleculeAtom("N", 0f, 0f),
+                        MoleculeAtom("H", -1f, 1.2f),
+                        MoleculeAtom("H", 1f, 1.2f),
+                        MoleculeAtom("H", 0f, -1.4f)
+                    ),
+                    bonds = listOf(MoleculeBond(0, 1), MoleculeBond(0, 2), MoleculeBond(0, 3))
+                )
+
+                else -> return Result.failure(
+                    IllegalArgumentException("No structure model found for '$formula'. Try H2O, CO2, CH4, or NH3.")
+                )
+            }
+            Result.success(structure)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     private fun parseMolecularFormula(formula: String): Double {
         var mass = 0.0
         var i = 0
@@ -159,4 +221,22 @@ class ChemistryService @Inject constructor() {
         return Pair(count, index)
     }
 }
+
+data class MoleculeStructure(
+    val name: String,
+    val atoms: List<MoleculeAtom>,
+    val bonds: List<MoleculeBond>
+)
+
+data class MoleculeAtom(
+    val symbol: String,
+    val x: Float,
+    val y: Float
+)
+
+data class MoleculeBond(
+    val fromIndex: Int,
+    val toIndex: Int,
+    val order: Int = 1
+)
 

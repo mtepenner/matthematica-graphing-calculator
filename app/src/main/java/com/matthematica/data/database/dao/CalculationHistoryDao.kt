@@ -16,6 +16,9 @@ interface CalculationHistoryDao {
     @Query("SELECT * FROM calculation_history WHERE userId = :userId ORDER BY timestamp DESC")
     fun getUserHistory(userId: String): Flow<List<CalculationHistory>>
 
+    @Query("SELECT * FROM calculation_history WHERE userId = :userId ORDER BY timestamp DESC")
+    suspend fun getUserHistorySnapshot(userId: String): List<CalculationHistory>
+
     @Query("SELECT * FROM calculation_history WHERE userId = :userId AND category = :category ORDER BY timestamp DESC")
     fun getUserHistoryByCategory(userId: String, category: String): Flow<List<CalculationHistory>>
 
