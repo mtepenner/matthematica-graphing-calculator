@@ -123,7 +123,7 @@ com.matthematica/
 
 1. **Clone and Open Project**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/mtepenner/matthematica-graphing-calculator.git
    cd Matthematica
    ```
 
