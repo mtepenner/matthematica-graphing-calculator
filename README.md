@@ -22,7 +22,8 @@ com.matthematica/
 │   ├── auth/
 │   │   └── AuthRepository.kt            # Authentication logic
 │   ├── calculator/
-│   │   └── CalculatorService.kt         # Math calculations
+│   │   ├── CalculatorService.kt         # Math calculations
+│   │   └── GraphingService.kt           # Graph point generation
 │   ├── chemistry/
 │   │   └── ChemistryService.kt          # Chemistry utilities
 │   └── llm/
@@ -93,6 +94,12 @@ com.matthematica/
 - **Favorites**: Mark important calculations
 - **Offline Access**: History stored locally in database
 
+### 7. Graphing
+- **Function Plotting**: Plot `f(x)` expressions from the calculator screen
+- **Custom Domain**: Configure `xMin` and `xMax` ranges before plotting
+- **Interactive Chart**: Pan/zoom with MPAndroidChart gestures
+- **Robust Sampling**: Invalid/non-finite points are filtered before rendering
+
 ## Technical Stack
 
 ### Dependencies
@@ -109,8 +116,9 @@ com.matthematica/
 ### Build Configuration
 - **Min SDK**: 24 (Android 7.0)
 - **Target SDK**: 36
-- **Kotlin**: 2.2.10
-- **Gradle**: 9.1.1
+- **AGP**: 8.6.1
+- **Kotlin**: 2.0.21
+- **Gradle**: 8.10.2
 
 ## Getting Started
 
@@ -195,7 +203,7 @@ val solution = llmService.solveWordProblem(
 
 ## Roadmap
 
-### Phase 1 (Current)
+### Phase 1 (Completed)
 - ✅ Basic calculator
 - ✅ Authentication
 - ✅ History tracking
@@ -203,8 +211,8 @@ val solution = llmService.solveWordProblem(
 - ✅ Chemistry basics
 - ✅ LLM integration framework
 
-### Phase 2 (Next)
-- [ ] Graphing/Plotting
+### Phase 2 (In Progress)
+- [x] Graphing/Plotting
 - [ ] Matrix operations
 - [ ] Statistics & probability
 - [ ] Calculus (derivatives, integrals)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,7 +32,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.unit.dp
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 
 @Composable
 fun CalculatorScreen(
@@ -71,6 +77,11 @@ fun CalculatorScreen(
                     selected = selectedTab == 3,
                     onClick = { selectedTab = 3; viewModel.setMode(CalculationMode.WORDPROBLEM) },
                     text = { Text("AI Solver") }
+                )
+                Tab(
+                    selected = selectedTab == 4,
+                    onClick = { selectedTab = 4; viewModel.setMode(CalculationMode.GRAPHING) },
+                    text = { Text("Graph") }
                 )
             }
 
@@ -120,6 +131,7 @@ fun CalculatorScreen(
                 1 -> TrigonometryCalculatorUI(viewModel)
                 2 -> ChemistryCalculatorUI(viewModel)
                 3 -> WordProblemSolverUI(viewModel)
+                4 -> GraphingCalculatorUI(viewModel)
             }
         }
     }
@@ -215,6 +227,8 @@ private fun TrigonometryCalculatorUI(viewModel: CalculatorViewModel) {
 
 @Composable
 private fun ChemistryCalculatorUI(viewModel: CalculatorViewModel) {
+    val displayValue by viewModel.displayValue.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -227,8 +241,8 @@ private fun ChemistryCalculatorUI(viewModel: CalculatorViewModel) {
         )
 
         OutlinedTextField(
-            value = "Enter molecular formula (e.g., H2O, NaCl)",
-            onValueChange = { viewModel.appendValue(it) },
+            value = displayValue,
+            onValueChange = viewModel::setDisplayValue,
             label = { Text("Molecular Formula") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -244,6 +258,8 @@ private fun ChemistryCalculatorUI(viewModel: CalculatorViewModel) {
 
 @Composable
 private fun WordProblemSolverUI(viewModel: CalculatorViewModel) {
+    val displayValue by viewModel.displayValue.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -256,8 +272,8 @@ private fun WordProblemSolverUI(viewModel: CalculatorViewModel) {
         )
 
         OutlinedTextField(
-            value = "Enter your word problem here...",
-            onValueChange = { viewModel.appendValue(it) },
+            value = displayValue,
+            onValueChange = viewModel::setDisplayValue,
             label = { Text("Word Problem") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -270,6 +286,84 @@ private fun WordProblemSolverUI(viewModel: CalculatorViewModel) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Solve with AI")
+        }
+    }
+}
+
+@Composable
+private fun GraphingCalculatorUI(viewModel: CalculatorViewModel) {
+    val expression by viewModel.displayValue.collectAsState()
+    val xMin by viewModel.graphXMin.collectAsState()
+    val xMax by viewModel.graphXMax.collectAsState()
+    val graphPoints by viewModel.graphPoints.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text("Graphing", style = MaterialTheme.typography.titleMedium)
+
+        OutlinedTextField(
+            value = expression,
+            onValueChange = viewModel::setDisplayValue,
+            label = { Text("f(x)") },
+            placeholder = { Text("Example: sin(x) + x^2") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedTextField(
+                value = xMin,
+                onValueChange = { newValue -> viewModel.setGraphRange(newValue, xMax) },
+                label = { Text("xMin") },
+                modifier = Modifier.weight(1f)
+            )
+
+            OutlinedTextField(
+                value = xMax,
+                onValueChange = { newValue -> viewModel.setGraphRange(xMin, newValue) },
+                label = { Text("xMax") },
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        Button(
+            onClick = { viewModel.calculate() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Plot")
+        }
+
+        if (graphPoints.isNotEmpty()) {
+            AndroidView(
+                factory = { context ->
+                    LineChart(context).apply {
+                        description.isEnabled = false
+                        setTouchEnabled(true)
+                        setPinchZoom(true)
+                        axisRight.isEnabled = false
+                    }
+                },
+                update = { chart ->
+                    val entries = graphPoints.map { point -> Entry(point.x, point.y) }
+                    val dataSet = LineDataSet(entries, "f(x)").apply {
+                        lineWidth = 2f
+                        color = android.graphics.Color.BLUE
+                        setDrawCircles(false)
+                        setDrawValues(false)
+                    }
+                    chart.data = LineData(dataSet)
+                    chart.invalidate()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(280.dp)
+            )
         }
     }
 }

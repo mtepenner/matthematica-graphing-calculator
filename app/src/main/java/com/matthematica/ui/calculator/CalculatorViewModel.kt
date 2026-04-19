@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.matthematica.data.database.dao.CalculationHistoryDao
 import com.matthematica.data.model.CalculationHistory
 import com.matthematica.domain.calculator.CalculatorService
+import com.matthematica.domain.calculator.GraphPoint
+import com.matthematica.domain.calculator.GraphingService
 import com.matthematica.domain.chemistry.ChemistryService
 import com.matthematica.domain.llm.LLMService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CalculatorViewModel @Inject constructor(
     private val calculatorService: CalculatorService,
+    private val graphingService: GraphingService,
     private val chemistryService: ChemistryService,
     private val llmService: LLMService,
     private val historyDao: CalculationHistoryDao
@@ -34,6 +37,15 @@ class CalculatorViewModel @Inject constructor(
     private val _calculationMode = MutableStateFlow(CalculationMode.BASIC)
     val calculationMode: StateFlow<CalculationMode> = _calculationMode.asStateFlow()
 
+    private val _graphPoints = MutableStateFlow<List<GraphPoint>>(emptyList())
+    val graphPoints: StateFlow<List<GraphPoint>> = _graphPoints.asStateFlow()
+
+    private val _graphXMin = MutableStateFlow("-10")
+    val graphXMin: StateFlow<String> = _graphXMin.asStateFlow()
+
+    private val _graphXMax = MutableStateFlow("10")
+    val graphXMax: StateFlow<String> = _graphXMax.asStateFlow()
+
     fun appendValue(value: String) {
         val current = _displayValue.value
         _displayValue.value = if (current == "0" && value != ".") {
@@ -46,12 +58,25 @@ class CalculatorViewModel @Inject constructor(
     fun clear() {
         _displayValue.value = "0"
         _calculationResult.value = ""
+        _graphPoints.value = emptyList()
         _calculatorState.value = CalculatorState.Idle
     }
 
     fun setMode(mode: CalculationMode) {
         _calculationMode.value = mode
         clear()
+        if (mode != CalculationMode.BASIC && mode != CalculationMode.TRIGONOMETRY) {
+            _displayValue.value = ""
+        }
+    }
+
+    fun setDisplayValue(value: String) {
+        _displayValue.value = value
+    }
+
+    fun setGraphRange(xMin: String, xMax: String) {
+        _graphXMin.value = xMin
+        _graphXMax.value = xMax
     }
 
     fun calculate() {
@@ -64,6 +89,7 @@ class CalculatorViewModel @Inject constructor(
                 CalculationMode.CHEMISTRY -> handleChemistryCalculation(expression)
                 CalculationMode.TRIGONOMETRY -> handleTrigonometryCalculation(expression)
                 CalculationMode.WORDPROBLEM -> handleWordProblem(expression)
+                CalculationMode.GRAPHING -> handleGraphingCalculation(expression)
             }
 
             result.onSuccess { resultValue ->
@@ -110,6 +136,19 @@ class CalculatorViewModel @Inject constructor(
         return llmService.solveWordProblem(problem).mapCatching { it }
     }
 
+    private fun handleGraphingCalculation(expression: String): Result<String> {
+        val xMin = _graphXMin.value.toDoubleOrNull()
+            ?: return Result.failure(IllegalArgumentException("Invalid xMin value"))
+        val xMax = _graphXMax.value.toDoubleOrNull()
+            ?: return Result.failure(IllegalArgumentException("Invalid xMax value"))
+
+        return graphingService.generateGraphPoints(expression, xMin, xMax)
+            .mapCatching { points ->
+                _graphPoints.value = points
+                "Generated ${points.size} points for x in [$xMin, $xMax]"
+            }
+    }
+
     private suspend fun saveToHistory(
         expression: String,
         result: String,
@@ -144,7 +183,7 @@ class CalculatorViewModel @Inject constructor(
 }
 
 enum class CalculationMode {
-    BASIC, CHEMISTRY, TRIGONOMETRY, WORDPROBLEM
+    BASIC, CHEMISTRY, TRIGONOMETRY, WORDPROBLEM, GRAPHING
 }
 
 sealed class CalculatorState {
