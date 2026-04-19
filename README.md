@@ -211,15 +211,19 @@ val solution = llmService.solveWordProblem(
 - ✅ Chemistry basics
 - ✅ LLM integration framework
 
-### Phase 2 (In Progress)
-- [x] Graphing/Plotting
+### Phase 2 (Completed)
+- [x] Function graphing with `f(x)` input
+- [x] Configurable graph domain (`xMin`, `xMax`)
+- [x] Interactive plotting with MPAndroidChart (pan/zoom)
+- [x] Graph point sampling + filtering for non-finite values
+- [x] Unit tests for graph generation paths
+
+### Phase 3 (Future)
 - [ ] Matrix operations
 - [ ] Statistics & probability
 - [ ] Calculus (derivatives, integrals)
 - [ ] Cloud sync for history
 - [ ] Offline graphing
-
-### Phase 3 (Future)
 - [ ] 3D graphing
 - [ ] Advanced chemistry (molecular structure visualization)
 - [ ] Real-time collaboration

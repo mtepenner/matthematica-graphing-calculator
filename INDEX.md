@@ -88,11 +88,11 @@ Your Android app has been successfully transformed into a comprehensive graphing
 3. Implement Groq service
 4. Test with sample problems
 
-#### Add Graphing Feature
-1. Check [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) - "Phase 2"
-2. Integrate MPAndroidChart (already in dependencies)
-3. Create `GraphingService.kt`
-4. Add graphing UI screen
+#### Use Graphing Feature
+1. Open calculator and switch to the **Graph** tab
+2. Enter an expression in `f(x)` (example: `sin(x) + x^2`)
+3. Set `xMin` and `xMax`
+4. Tap **Plot** to render and interact with the chart
 
 #### Deploy to Play Store
 1. Review [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) - "Deployment Checklist"
@@ -202,8 +202,8 @@ Matthematica/
 1. Read all documentation files
 2. Review: [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) - Full
 3. Study the codebase
-4. Implement graphing (Phase 2)
-5. Add more features
+4. Extend Phase 3 features (matrix/statistics/calculus)
+5. Add more advanced features
 6. Deploy to Play Store
 
 ---
@@ -251,8 +251,8 @@ Matthematica/
 ### Q: What's the database schema?
 **A:** See [MATTHEMATICA_SUMMARY.md](./MATTHEMATICA_SUMMARY.md) - "Database Schema"
 
-### Q: How do I add graphing?
-**A:** See [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) - "Phase 2: Graphing"
+### Q: How do I use graphing?
+**A:** Open the Graph tab in the calculator and plot `f(x)` with custom ranges.
 
 ### Q: Is this production-ready?
 **A:** See [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) - "Deployment Checklist"
@@ -297,16 +297,16 @@ Matthematica/
 
 | Category | Technology | Version |
 |----------|-----------|---------|
-| Language | Kotlin | 2.2.10 |
+| Language | Kotlin | 2.0.21 |
 | UI Framework | Jetpack Compose | Latest |
-| Database | Room | 2.6.1 |
-| Networking | Retrofit | 2.9.0 |
-| DI | Hilt | 2.48 |
+| Database | Room | 2.7.2 |
+| Networking | Retrofit | 2.11.0 |
+| DI | Hilt | 2.57.1 |
 | Math | exp4j | 0.4.8 |
 | Math | Apache Commons Math | 3.6.1 |
 | Graphing | MPAndroidChart | 3.1.0 |
-| Serialization | Kotlinx Serialization | 1.6.0 |
-| Storage | DataStore | 1.0.0 |
+| Serialization | Kotlinx Serialization | 1.9.0 |
+| Storage | DataStore | 1.1.1 |
 
 ---
 
@@ -350,8 +350,8 @@ See [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) - "Security Considerati
 |-------|--------|---------|
 | Phase 0: Planning | ✅ Complete | Comprehensive plan created |
 | Phase 1: Core App | ✅ Complete | Auth, calculator, chemistry, history |
-| Phase 2: LLM | 🔄 Ready | See LLM_INTEGRATION_GUIDE.md |
-| Phase 3: Graphing | 📋 Planned | See IMPLEMENTATION_GUIDE.md |
+| Phase 2: Graphing | ✅ Complete | See IMPLEMENTATION_GUIDE.md |
+| Phase 3: LLM Provider Integration | 🔄 Ready | See LLM_INTEGRATION_GUIDE.md |
 | Phase 4: Extras | 📋 Future | Advanced features TBD |
 
 ---
@@ -371,8 +371,8 @@ See [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) - "Security Considerati
 1. ✅ **Read** [MATTHEMATICA_SUMMARY.md](./MATTHEMATICA_SUMMARY.md) - 10 minutes
 2. 🔧 **Build** the project - 5 minutes  
 3. 🧪 **Test** the calculator - 10 minutes
-4. 🤖 **Integrate LLM** - 30 minutes (optional)
-5. 📊 **Add Graphing** - 1-2 hours (optional)
+4. 📊 **Try Graphing** - 5 minutes (Graph tab)
+5. 🤖 **Integrate LLM Provider** - 30 minutes (optional)
 
 ---
 
